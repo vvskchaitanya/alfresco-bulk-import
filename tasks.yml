@@ -1,6 +1,29 @@
 wget -c "https://d1juwce2y308l6.cloudfront.net/release/community/7.2.0.1-build-2802/alfresco-content-services-community-distribution-7.2.0.1.zip?Expires=1662965280&Signature=SgzuBmrNQf41Gmb5mIpNcO9NF9eMlX8ZMAx89OdC9R3-aVllsVpEZfMB4MzwZ7AozQR2wUG-oDT3rqwZINvByMRa0ZztgucjQmVD2KSmBL5Iard5y5MHrbLkF1rWsAD27gjK5395S-UGr4fSb49KtuUtFFs8tOtJadL840x9b8DbSmRiUjoW3KjermARg4RRr0deShnupEz-LloACA1L7RuvxwI8l~hTh~3vE-XYGAhqmA1Y1m4QY-diPqdkMmhdj97eEYKTbRPBzI-YTnLoFzDHCquxetLwhb0v-3QCb0diUfrmzPXxNzkp1QOpVvfx46Pt48WNMf2QJge04PyF7w__&Key-Pair-Id=APKAIWUXSJDXLMSTSCYA" -O alfresco-content-services.zip
 unzip alfresco-content-services.zip -d acs
+
 wget -c "https://d1juwce2y308l6.cloudfront.net/release/community/SearchServices/2.0.3.6/alfresco-search-services-2.0.3.6.zip?Expires=1662966240&Signature=JxOzz5cQDSeLIj1Din~li~n9ARXbU~pgZo8ePNJjtLAZBRKguyrSBdkDkav8Rwz2MHgtz0ColgD~lGIrY~zrBaCzSnT2Mf~Ve~uP4CWTte-CDW6vnsGNB7shHlg0tZkly4EDSZpTHnuTJ2JcN9XLOg7sYaJvmvPW0PYe7Knl1GMmQl1sCjzc0cLxDYUGpFh2e2Tc7-YbD8X-xyWyb72g3ahuDtKtyT9lAZjcHSdjEXHvybK~sBoJ3rM3-umMyN7nG6LNaz62NCeSAElzfnqaEu-afFXYTCpJwIsdhInQd34JGCXDr0~5ZRtVhvo-q5gpGryHr1iY7XsNNAZ3K9ldww__&Key-Pair-Id=APKAIWUXSJDXLMSTSCYA" -O alfresco-search-services.zip
 unzip alfresco-search-services.zip -d acs
+
 wget -c "https://dlcdn.apache.org//activemq/5.17.1/apache-activemq-5.17.1-bin.tar.gz" -O "activemq-5.17.1-bin.tar.gz"
 tar -zxvf "activemq-5.17.1-bin.tar.gz"
+
+sudo su
+apt-get install postgresql-12
+sudo -u postgres service postgresql start
+sudo -u postgres psql
+create database alfresco encoding 'utf8';
+create role alfresco LOGIN password 'alfresco';
+grant all on database alfresco to alfresco;
+
+wget -c "http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.tar.gz" -O "tomcat.tar.gz"
+tar -zxvf "tomcat.tar.gz"
+
+rm -r apache-tomcat-8.0.23/webapps/*
+cp acs/web-server/webapps/alfresco.war apache-tomcat-8.0.23/webapps/
+cp acs/web-server/webapps/share.war apache-tomcat-8.0.23/webapps/
+cp -r acs/web-server/conf/* apache-tomcat-8.0.23/conf/
+cp -r acs/web-server/shared/* apache-tomcat-8.0.23/shared/
+cp -r acs/web-server/lib/*.jar apache-tomcat-8.0.23/lib/
+mkdir alf_data
+mkdir alf_data/keystore
+cp -r acs/keystore/* alf_data/keystore/
