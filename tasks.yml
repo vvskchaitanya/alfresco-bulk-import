@@ -55,7 +55,9 @@ open tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml add be
 </config>
 
 chmod 777 apache-tomcat-9.0.65/bin/*.sh
-rm -rf apache-tomcat-9.0.65/logs/catalina.out
 apache-tomcat-9.0.65/bin/startup.sh
-apache-tomcat-9.0.65/bin/shutdown.sh
 tail -1000f apache-tomcat-9.0.65/logs/catalina.out
+
+apache-tomcat-9.0.65/bin/shutdown.sh
+sudo -u postgres service postgresql stop
+rm -rf apache-tomcat-9.0.65/logs/catalina.out
