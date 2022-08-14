@@ -45,16 +45,14 @@ open tomcat/conf/catalina.properties update shared.loader=${catalina.base}/share
 open tomcat/bin/cataina.sh 
 export JAVA_TOOL_OPTIONS="-Dencryption.keystore.type=JCEKS -Dencryption.cipherAlgorithm=DESede/CBC/PKCS5Padding -Dencryption.keyAlgorithm=DESede -Dencryption.keystore.location=/workspace/alfresco-bulk-import/apache-tomcat-9.0.65/shared/classes/alfresco/extension/keystore/metadata-keystore/keystore -Dmetadata-keystore.password=mp6yc0UD9e -Dmetadata-keystore.aliases=metadata -Dmetadata-keystore.metadata.password=oKIWzVdEdA -Dmetadata-keystore.metadata.algorithm=DESede"
 
-cp apache-tomcat-9.0.65/webapps/share/WEB-INF/classes/alfresco/share-security-config.xml apache-tomcat-9.0.65/shared/classes/alfresco/
-<token>Alfresco-CSRFToken</token>
-<referer>^https:\/\/.*\.gitpod\.io(.*)?</referer>
-<origin>^https:\/\/.*\.gitpod\.io(.*)?</origin>
-csrf.filter.enabled=false
-csrf.filter.referer=^https:\/\/.*\.gitpod\.io(.*)?
-csrf.filter.referer.always=false
-csrf.filter.origin=^https:\/\/.*\.gitpod\.io(.*)?
-csrf.filter.origin.always=false
-
+open tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml add below config
+<config evaluator="string-compare" condition="CSRFPolicy" replace="true">
+  <properties>
+    <token>Alfresco-CSRFToken</token>
+    <referer>^https:\/\/.*\.gitpod\.io(.*)?</referer>
+    <origin>^https:\/\/.*\.gitpod\.io(.*)?</origin>
+  </properties>
+</config>
 
 chmod 777 apache-tomcat-9.0.65/bin/*.sh
 rm -rf apache-tomcat-9.0.65/logs/catalina.out
